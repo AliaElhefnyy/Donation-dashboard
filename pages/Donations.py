@@ -14,7 +14,7 @@ st.set_page_config(layout="wide")
 st.title("Donation Analytics Dashboard")
 
 
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=4)
 def load_data():
     return pd.read_csv("data/donations.csv")
 
