@@ -2,8 +2,24 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import datetime
+import os
 
+
+
+# ----------------------------
+# PAGE CONFIG
+# ----------------------------
+st.set_page_config(layout="wide")
 st.title("Donation Analytics Dashboard")
+
+
+@st.cache_data(ttl=60)
+def load_data():
+    return pd.read_csv("data/donations.csv")
+
+df = load_data()
+
 
 # Load data
 df = pd.read_csv("data/donations.csv")
@@ -274,3 +290,32 @@ fig6.update_layout(title="Donation Spikes Detected")
 
 st.plotly_chart(fig6, use_container_width=True)
 
+
+# --------------------------------------------------------------
+#             LAST DASHBOARD UPDATE
+# --------------------------------------------------------------
+# Get the last modified time of the data file
+file_path = "data/donations.csv"
+last_modified_timestamp = os.path.getmtime(file_path)
+last_modified = datetime.datetime.fromtimestamp(last_modified_timestamp)
+
+# Format nicely
+formatted_time = last_modified.strftime('%b %d, %Y, %H:%M:%S')
+
+# Footer
+st.markdown(
+    f"""
+    <style>
+    .footer {{
+        position: fixed;
+        bottom: 10px;
+        right: 20px;
+        font-size: 12px;
+        color: #888888;
+        z-index: 100;
+    }}
+    </style>
+    <div class="footer">🕒 Data last updated: {formatted_time}</div>
+    """,
+    unsafe_allow_html=True
+)
